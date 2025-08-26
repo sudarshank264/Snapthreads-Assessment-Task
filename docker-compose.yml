@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend   # path to your NestJS app
+    container_name: nest-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend  # path to your Next.js app
+    container_name: next-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      # This will be used inside Next.js
+      - NEXT_PUBLIC_API_URL=http://backend:4000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
